@@ -42,6 +42,8 @@ module RemoteAssociable
 
   def from_site(type, klass, *ids)
     json = Net::HTTP.get (URI("#{self.site}?type=#{type.to_s}&id=#{ids.join(',')}"))
+    return nil if json.empty?
+
     objs = ActiveSupport::JSON.decode(json)
 
     klass = type.to_s.capitalize.constantize
