@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = RemoteModels::VERSION
   spec.authors       = ["boncri"]
   spec.email         = ["cristiano.boncompagni@intersail.it"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = 'Use read-only remote associations with a JSON remote service'
+  spec.description   = ''
   spec.homepage      = ""
   spec.license       = "MIT"
 
