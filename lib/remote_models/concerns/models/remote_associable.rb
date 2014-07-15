@@ -21,18 +21,17 @@ module RemoteAssociable
         unless instance_variable_defined?(var_name)
           fk_value = send(fk_name)
           value = fk_value<=0 ? nil : from_site(name, klass, fk_value)
-          value &&= value.first
-          instance_variable_set(var_name, value)
+          instance_variable_set(var_name, value && value.first)
         end
         instance_variable_get(var_name)
       end
 
-      alias_method "orig_#{fk_name}=", "#{fk_name}="
-      define_method "#{fk_name}=" do |value|
-        var_name = "@#{field}"
-        remove_instance_variable(var_name) if instance_variable_defined?(var_name)
-        send "orig_#{fk_name}=", value
-      end
+      # alias_method "orig_#{fk_name}=", "#{fk_name}="
+      # define_method "#{fk_name}=" do |value|
+      #   var_name = "@#{field}"
+      #   remove_instance_variable(var_name) if instance_variable_defined?(var_name)
+      #   send "orig_#{fk_name}=", value
+      # end
 
       self.remote_fields << field
     end
