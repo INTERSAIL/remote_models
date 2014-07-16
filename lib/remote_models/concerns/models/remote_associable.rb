@@ -1,4 +1,4 @@
-module RemoteAssociable
+module Intersail::RemoteModels::RemoteAssociable
   extend ActiveSupport::Concern
 
   included do
@@ -13,8 +13,8 @@ module RemoteAssociable
       self.remote_fields.delete(field)
 
       fk_name = options.delete(:foreign_key) || "#{field}_id"
-      klass = options.delete(:class) || field.capitalize
       name = options.delete(:name) || field.to_s
+      klass = options.delete(:class) || name.to_s.capitalize
       var_name = "@#{field}"
 
       define_method field do
@@ -26,14 +26,29 @@ module RemoteAssociable
         instance_variable_get(var_name)
       end
 
-      alias_method "orig_#{fk_name}=", "#{fk_name}="
       define_method "#{fk_name}=" do |value|
         var_name = "@#{field}"
         remove_instance_variable(var_name) if instance_variable_defined?(var_name)
-        send "orig_#{fk_name}=", value
+        write_attribute fk_name, value
       end
 
       self.remote_fields << field
+    end
+
+    def has_many_remote(field, options={})
+      through = options.delete(:through)
+      name = options.delete(:name) || field.to_s.singularize
+      klass = options.delete(:class) || name.to_s.capitalize
+      fk_name = options.delete(:foreign_key) || "#{field.to_s.singularize}_id"
+      var_name = "@#{field}"
+
+      define_method field do
+        unless instance_variable_defined?(var_name)
+          ids = send(through).map { |o| o.send(fk_name) }
+          instance_variable_set(var_name, from_site(name, klass, ids))
+        end
+        instance_variable_get(var_name)
+      end
     end
   end
 
@@ -45,7 +60,7 @@ module RemoteAssociable
 
     objs = ActiveSupport::JSON.decode(json)
 
-    klass = type.to_s.capitalize.constantize
+    klass = klass.to_s.capitalize.constantize
 
     objs.map { |o| klass.new.from_json(o.to_json) }
   end
