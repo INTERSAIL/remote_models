@@ -21,11 +21,19 @@ Or install it yourself as:
 The following code defines a **Course** class having a one-to-one remote association with an object of type **Person**, called *teacher*. Use the *teacher_id* property as the foreign_key.
  
     class Course
-        include RemoteAssociable
+        include Intersail::RemoteModels::RemoteAssociable
                 
         has_one_remote :teacher, class: Person, name: :person
         
         self.site = 'http://<path_of_json_service>/ReadEntity.aspx        
+    end
+    
+The following code defines a class **Person** as a *remote model*: the instances of this class will be retrieved using the remote service
+ 
+    class Person
+        include Intersail::RemoteModels::RemoteModel
+        
+        remote_attributes :id, :first_name, :last_name, :birth_date, :height, :weight, :is_admin
     end
 
 Now you can do the following
