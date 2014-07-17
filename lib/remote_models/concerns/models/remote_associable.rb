@@ -9,6 +9,8 @@ module Intersail
         cattr_accessor :remote_fields
 
         self.remote_fields = []
+
+        self.site = RemoteModels::Settings.config[:site]
       end
 
       module ClassMethods
