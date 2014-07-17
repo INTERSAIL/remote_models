@@ -1,7 +1,9 @@
 module Intersail
   module RemoteModels
     class Settings
-      @config = {}
+      def initialize
+        @config = {}
+      end
 
       def site
         @config[:site]
