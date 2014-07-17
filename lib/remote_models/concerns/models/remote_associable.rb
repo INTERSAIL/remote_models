@@ -10,7 +10,7 @@ module Intersail
 
         self.remote_fields = []
 
-        self.site = RemoteModels::Settings.config[:site]
+        self.site = ::RemoteModels::Settings.config[:site]
       end
 
       module ClassMethods
