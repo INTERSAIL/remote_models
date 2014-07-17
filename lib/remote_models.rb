@@ -1,4 +1,5 @@
 require "remote_models/version"
+require 'settings'
 require 'remote_models/concerns/models/remote_associable'
 require 'remote_models/concerns/models/remote_model'
 
@@ -12,17 +13,6 @@ module Intersail
 
     def self.config
       @@config
-    end
-
-    class Settings
-      @config = {}
-
-      def site
-        @config[:site]
-      end
-      def site=(value)
-        @config[:site] = value
-      end
     end
   end
 end
