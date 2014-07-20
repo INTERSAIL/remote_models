@@ -7,11 +7,11 @@ require "remote_models/version"
 Gem::Specification.new do |s|
   s.name        = "remote_models"
   s.version     = RemoteModels::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of RemoteModels."
-  s.description = "TODO: Description of RemoteModels."
+  s.authors     = ["INTERSAIL"]
+  s.email       = ["info@intersail.it"]
+  s.homepage    = "http://www.intersail.it"
+  s.summary     = "Use read-only remote associations with a JSON remote service"
+  s.description = "Use read-only remote associations with a JSON remote service"
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
