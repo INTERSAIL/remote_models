@@ -1,3 +1,70 @@
 = RemoteModels
 
-This project rocks and uses MIT-LICENSE.
+Gem to create read-only associations with remote objects. The remote objects are retrieved on-demand and cached by a remote service (JsonService).
+
+== Installation
+
+Add this line to your application's Gemfile:
+
+    gem 'remote_models'
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install remote_models
+
+== Usage
+
+=== Initializer
+
+Launch the following command to generate the initializer file _config/initializers/remote_models.rb_
+
+    $ rails generate intersail:remote_models:install    
+    
+The initializer can set the default _site_ property, example:
+
+    Intersail::RemoteModels.setup do |config|
+        config.site = 'http://localhost/JsonService/ReadEntity.aspx'
+    end     
+
+=== Example
+
+The following code defines a *Course* class having a one-to-one remote association with an object of type *Person*, called _teacher_. Use the _teacher_id_ property as the foreign_key.
+ 
+    class Course
+        include Intersail::RemoteModels::RemoteAssociable
+                
+        has_one_remote :teacher, class: Person, name: :person
+        
+        self.site = 'http://<path_of_json_service>/ReadEntity.aspx        
+    end
+    
+The following code defines a class *Person* as a *remote model*: the instances of this class will be retrieved using the remote service
+ 
+    class Person
+        include Intersail::RemoteModels::RemoteModel
+        
+        remote_attributes :id, :first_name, :last_name, :birth_date, :height, :weight, :is_admin
+    end
+
+Now you can do the following
+
+    c = Course.new
+    
+    c.teacher_id = 1
+    c.teacher # -> returns the Person with id=1, stored on remote location, via the JsonService
+    c.teacher # -> returns the same Person, doesn't repeat the remote call
+    
+    c.teacher_id = 2
+    c.teacher # -> returns the Person with id=1, stored on remote location, via the JsonService (setting the teacher_id invalidates the teacher property) 
+
+== Contributing
+
+1. Fork it ( https://github.com/[my-github-username]/remote_models/fork )
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request
