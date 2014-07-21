@@ -3,7 +3,7 @@ PATH
   specs:
     remote_models (0.4.1)
       activesupport
-      rails (~> 4.1.4)
+      rails (~> 4.1.0)
 
 GEM
   remote: https://rubygems.org/
