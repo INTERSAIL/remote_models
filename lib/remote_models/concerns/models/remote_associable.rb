@@ -17,7 +17,13 @@ module Intersail
         def all(options={})
           name = options.delete(:name) || self.class.name.to_s.downcase
           klass = self.class.name
-          self.from_site name, klass, nil, nil
+          var_name = "@all"
+
+          define_method 'all_remote' do
+            instance_variable_set(var_name, from_site(name, klass, nil, nil))
+            instance_variable_get(var_name)
+          end
+
         end
 
         def has_one_remote(field, options={})
