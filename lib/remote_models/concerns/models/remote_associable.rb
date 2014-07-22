@@ -25,7 +25,7 @@ module Intersail
           define_method field do
             unless instance_variable_defined?(var_name)
               fk_value = send(fk_name)
-              value = fk_value<=0 ? nil : from_site(name, klass, fk_value)
+              value = fk_value<=0 ? nil : from_site(name, klass, nil, fk_value)
               instance_variable_set(var_name, value && value.first)
             end
             instance_variable_get(var_name)
