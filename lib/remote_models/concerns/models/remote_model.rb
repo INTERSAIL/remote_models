@@ -7,8 +7,16 @@ module Intersail
         include ActiveModel::Model
         include ActiveModel::Serializers::JSON
 
+        mattr_accessor :rattrs do
+          []
+        end
+
         class << self
-          alias_method :remote_attributes, :attr_accessor
+          def remote_attributes(*attr_accessor_args)
+            (self.rattrs << attr_accessor_args).flatten!
+            attr_accessor *attr_accessor_args
+          end
+          # alias_method :remote_attributes, :attr_accessor
         end
       end
 
@@ -23,6 +31,10 @@ module Intersail
 
       def attributes
         instance_values
+      end
+
+      def write_attribute(attr_name, value)
+        instance_variable_set "@#{attr_name}", value
       end
     end
   end

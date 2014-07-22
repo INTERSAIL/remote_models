@@ -55,19 +55,24 @@ module Intersail
             instance_variable_get(var_name)
           end
         end
-      end
 
-      private
+        private
+        def from_site(type, klass, *ids)
+          url = "#{self.site}?type=#{type.to_s}&id=#{ids.join(',')}&fields=#{remote_fields_param(klass)}"
 
-      def from_site(type, klass, *ids)
-        json = Net::HTTP.get (URI("#{self.site}?type=#{type.to_s}&id=#{ids.join(',')}"))
-        return nil if json.empty?
+          json = Net::HTTP.get (URI(url))
+          return nil if json.empty?
 
-        objs = ActiveSupport::JSON.decode(json)
+          objs = ActiveSupport::JSON.decode(json)
 
-        klass = klass.to_s.capitalize.constantize
+          klass = klass.to_s.capitalize.constantize
 
-        objs.map { |o| klass.new.from_json(o.to_json) }
+          objs.map { |o| klass.new.from_json(o.to_json) }
+        end
+
+        def remote_fields_param(klass)
+          klass.send(:rattrs).join(',')
+        end
       end
     end
   end

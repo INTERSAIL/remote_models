@@ -1,5 +1,5 @@
 class Address
   include Intersail::RemoteModels::RemoteModel
 
-  remote_attributes :street, :zipcode, :city
+  remote_attributes :id, :street, :zipcode, :city
 end
