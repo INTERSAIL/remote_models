@@ -14,7 +14,7 @@ module Intersail
       end
 
       module ClassMethods
-        def self.all(options={})
+        def all(options={})
           name = options.delete(:name) || self.class.name.to_s.downcase
           klass = self.class.name
           from_site name, klass, nil, nil
