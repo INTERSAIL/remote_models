@@ -19,11 +19,19 @@ module Intersail
           klass = self.class.name
           var_name = "@all"
 
-          define_method 'all_remote' do
-            instance_variable_set(var_name, from_site(name, klass, nil, nil))
-            instance_variable_get(var_name)
-          end
+          from_site2(name, klass, nil, nil)
 
+        end
+
+        def from_site2(type, klass, where, *ids)
+          json = Net::HTTP.get (URI("#{self.site}?type=#{type.to_s}&id=#{ids.join(',') if ids}&where=#{where}"))
+          return nil if json.empty?
+
+          objs = ActiveSupport::JSON.decode(json)
+
+          klass = klass.to_s.capitalize.constantize
+
+          objs.map { |o| klass.new.from_json(o.to_json) }
         end
 
         def has_one_remote(field, options={})
