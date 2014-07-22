@@ -14,6 +14,12 @@ module Intersail
       end
 
       module ClassMethods
+        def self.all(options={})
+          name = options.delete(:name) || self.class.name.to_s.downcase
+          klass = self.class.name
+          from_site name, klass, nil, nil
+        end
+
         def has_one_remote(field, options={})
           self.remote_fields.delete(field)
 
