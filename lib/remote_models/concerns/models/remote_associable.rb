@@ -17,7 +17,7 @@ module Intersail
         def all(options={})
           name = options.delete(:name) || self.class.name.to_s.downcase
           klass = self.class.name
-          from_site name, klass, nil, nil
+          self.from_site name, klass, nil, nil
         end
 
         def has_one_remote(field, options={})
