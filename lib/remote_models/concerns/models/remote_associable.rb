@@ -49,8 +49,11 @@ module Intersail
 
           define_method field do
             unless instance_variable_defined?(var_name)
-              ids = send(through).map { |o| o.send(fk_name) }
-              instance_variable_set(var_name, from_site(name, klass, ids))
+              # se è definito il parametro "through" significa che si tratta di una relazione N-M, quindi devo recuperare tutti gli ids dell'associazione contenuti nella tabella intermedia
+              ids = send(through).map { |o| o.send(fk_name) } if through
+              # se invece non è definito il parametro "through" significa che si tratta di una relazione 1-N, quindi devo recuperare gli elementi che hanno la foreign key indicata nella relazione
+              where = "#{fk_name} eq #{send(id)}" unless through
+              instance_variable_set(var_name, from_site(name, klass, where, ids))
             end
             instance_variable_get(var_name)
           end
@@ -59,8 +62,8 @@ module Intersail
 
       private
 
-      def from_site(type, klass, *ids)
-        json = Net::HTTP.get (URI("#{self.site}?type=#{type.to_s}&id=#{ids.join(',')}"))
+      def from_site(type, klass, where, *ids)
+        json = Net::HTTP.get (URI("#{self.site}?type=#{type.to_s}&id=#{ids.join(',') if ids}&where=#{where}"))
         return nil if json.empty?
 
         objs = ActiveSupport::JSON.decode(json)
