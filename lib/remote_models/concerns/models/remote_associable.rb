@@ -14,10 +14,10 @@ module Intersail
       end
 
       module ClassMethods
-        def all(options={})
+        def all_remote(options={})
           name = options.delete(:name) || self.class.name.to_s.downcase
           klass = self.class.name
-          var_name = "@all"
+          var_name = "@all_remote"
 
           from_site2(name, klass, nil, nil)
 
