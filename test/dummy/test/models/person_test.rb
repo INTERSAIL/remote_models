@@ -15,4 +15,8 @@ class PersonTest < ActiveSupport::TestCase
     p = person
     assert_equal 1, p.address.id
   end
+
+  test "Person must respond to all_remote" do
+    assert_respond_to Person, :all_remote
+  end
 end
