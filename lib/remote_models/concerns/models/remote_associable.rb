@@ -4,6 +4,8 @@ module Intersail
 
       extend ActiveSupport::Concern
 
+      include Intersail::RemoteCall
+
       included do
         cattr_accessor :site
         cattr_accessor :remote_fields
@@ -17,21 +19,6 @@ module Intersail
         def all_remote(options={})
           name = options.delete(:name) || self.name.to_s.downcase
           klass = self.name
-          var_name = "@all_remote"
-
-          from_site2(name, klass, nil, nil)
-
-        end
-
-        def from_site2(type, klass, where, *ids)
-          json = Net::HTTP.get (URI("#{self.site}?type=#{type.to_s}&id=#{ids.join(',') if ids}&where=#{where}"))
-          return nil if json.empty?
-
-          objs = ActiveSupport::JSON.decode(json)
-
-          klass = klass.to_s.capitalize.constantize
-
-          objs.map { |o| klass.new.from_json(o.to_json) }
         end
 
         def has_one_remote(field, options={})
@@ -78,19 +65,6 @@ module Intersail
             instance_variable_get(var_name)
           end
         end
-      end
-
-      private
-
-      def from_site(type, klass, where, *ids)
-        json = Net::HTTP.get (URI("#{self.site}?type=#{type.to_s}&id=#{ids.join(',') if ids}&where=#{where}"))
-        return nil if json.empty?
-
-        objs = ActiveSupport::JSON.decode(json)
-
-        klass = klass.to_s.capitalize.constantize
-
-        objs.map { |o| klass.new.from_json(o.to_json) }
       end
     end
   end
