@@ -4,7 +4,7 @@ module Intersail
 
       extend ActiveSupport::Concern
 
-      extend Intersail::RemoteCall
+      extend ::Intersail::RemoteCall
 
       included do
         cattr_accessor :site
