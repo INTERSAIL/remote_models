@@ -1,5 +1,6 @@
 require "remote_models/version"
 require 'settings'
+require 'remote_models/concerns/remote_call'
 require 'remote_models/concerns/models/remote_associable'
 require 'remote_models/concerns/models/remote_model'
 
