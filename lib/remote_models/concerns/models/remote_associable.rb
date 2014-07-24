@@ -1,7 +1,6 @@
 module Intersail
   module RemoteModels
     module RemoteAssociable
-
       extend ActiveSupport::Concern
       include Intersail::RemoteModels::RemoteCall
 
@@ -17,7 +16,7 @@ module Intersail
           define_method field do
             unless instance_variable_defined?(var_name)
               fk_value = send(fk_name)
-              value = fk_value<=0 ? nil : from_site(name, klass, fk_value, 0, nil, nil)
+              value = fk_value<=0 ? nil : self.class.from_site(name, klass, fk_value, 0, nil, nil)
               instance_variable_set(var_name, value && value.first)
             end
             instance_variable_get(var_name)
@@ -45,7 +44,7 @@ module Intersail
               ids = send(through).map { |o| o.send(fk_name) } if through
               # se invece non è definito il parametro "through" significa che si tratta di una relazione 1-N, quindi devo recuperare gli elementi che hanno la foreign key indicata nella relazione
               where = "#{fk_name} eq #{send(id)}" unless through
-              instance_variable_set(var_name, from_site(name, klass, ids, 0, where, nil))
+              instance_variable_set(var_name, self.class.from_site(name, klass, ids, 0, where, nil))
             end
             instance_variable_get(var_name)
           end

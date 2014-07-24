@@ -7,7 +7,7 @@ class CourseTest < ActiveSupport::TestCase
 
   def course()
     course = Course.create(name: 'Test', teacher_id: 1)
-    course.expects(from_site: [Person.new(id:1, first_name: 'PAOLINO', last_name: 'PAPERINO')])
+    Course.expects(from_site: [Person.new(id:1, first_name: 'PAOLINO', last_name: 'PAPERINO')]) if ENV['MOCK']
     course
   end
 
@@ -15,7 +15,7 @@ class CourseTest < ActiveSupport::TestCase
     course_with_subscriptions = Course.create(name: 'Test with subs', teacher_id:1)
     course_with_subscriptions.subscriptions.create(student_id: 2)
     course_with_subscriptions.subscriptions.create(student_id: 3)
-    course_with_subscriptions.expects(from_site: [Person.new(id:2, first_name:'PIPPO', last_name:'PLUTO'), Person.new(id:3, first_name:'MICKEY', last_name:'MOUSE')])
+    Course.expects(from_site: [Person.new(id:2, first_name:'PIPPO', last_name:'PLUTO'), Person.new(id:3, first_name:'MICKEY', last_name:'MOUSE')]) if ENV['MOCK']
     course_with_subscriptions
   end
 
@@ -55,11 +55,11 @@ class CourseTest < ActiveSupport::TestCase
     assert_not_nil c.teacher
 
     c.teacher_id = 20
-    c.expects(from_site: nil)
+    Course.expects(from_site: nil) if ENV['MOCK']
     assert_nil c.teacher
 
     c.teacher_id = 1
-    c.expects(from_site: [Person.new(id:1, first_name:'PAOLINO', last_name: 'PAPERINO')])
+    Course.expects(from_site: [Person.new(id:1, first_name:'PAOLINO', last_name: 'PAPERINO')]) if ENV['MOCK']
     assert_not_nil c.teacher
   end
 end

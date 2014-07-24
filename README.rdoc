@@ -61,6 +61,11 @@ Now you can do the following
     c.teacher_id = 2
     c.teacher # -> returns the Person with id=1, stored on remote location, via the JsonService (setting the teacher_id invalidates the teacher property) 
 
+== Testing
+
+To simulate the remote service you can use <i>rake MOCK=1</i> that mocks the 'from_site' method with expectations.
+Invoking _rake_ without any parameter use the remote service http://sail2p/JsonService/ReadEntity.aspx that must be set to support the tests.
+
 == Contributing
 
 1. Fork it ( https://github.com/INTERSAIL/remote_models/fork )

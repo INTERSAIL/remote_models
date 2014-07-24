@@ -3,7 +3,7 @@ require 'test_helper'
 class PersonTest < ActiveSupport::TestCase
   def person
     p = Person.new(address_id:1)
-    p.expects(:from_site).returns([Address.new(id:1)])
+    Person.expects(:from_site).returns([Address.new(id:1)]) if ENV['MOCK']
     p
   end
 
