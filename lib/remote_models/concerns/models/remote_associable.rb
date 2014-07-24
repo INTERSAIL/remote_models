@@ -3,15 +3,7 @@ module Intersail
     module RemoteAssociable
 
       extend ActiveSupport::Concern
-
-      included do
-        cattr_accessor :site
-        cattr_accessor :remote_fields
-
-        self.remote_fields = []
-
-        self.site = ::Intersail::RemoteModels.config.site
-      end
+      include Intersail::RemoteModels::RemoteCall
 
       module ClassMethods
         def has_one_remote(field, options={})
@@ -25,7 +17,7 @@ module Intersail
           define_method field do
             unless instance_variable_defined?(var_name)
               fk_value = send(fk_name)
-              value = fk_value<=0 ? nil : from_site(name, klass, fk_value)
+              value = fk_value<=0 ? nil : from_site(name, klass, 0, nil, fk_value)
               instance_variable_set(var_name, value && value.first)
             end
             instance_variable_get(var_name)
@@ -49,25 +41,13 @@ module Intersail
 
           define_method field do
             unless instance_variable_defined?(var_name)
-              ids = send(through).map { |o| o.send(fk_name) }
-              instance_variable_set(var_name, from_site(name, klass, ids))
+              ids = send(through).map { |o| o.send(fk_name) } if through
+              where = "#{fk_name} eq #{send(id)}" unless through
+              instance_variable_set(var_name, from_site(name, klass, 0, where, ids))
             end
             instance_variable_get(var_name)
           end
         end
-      end
-
-      private
-
-      def from_site(type, klass, *ids)
-        json = Net::HTTP.get (URI("#{self.site}?type=#{type.to_s}&id=#{ids.join(',')}"))
-        return nil if json.empty?
-
-        objs = ActiveSupport::JSON.decode(json)
-
-        klass = klass.to_s.capitalize.constantize
-
-        objs.map { |o| klass.new.from_json(o.to_json) }
       end
     end
   end
