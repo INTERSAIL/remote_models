@@ -17,4 +17,8 @@ class TeacherTest < ActiveSupport::TestCase
     assert_not_nil teachers
     assert_operator teachers.count, :>, 0
   end
+
+  test 'Ordering Teachers by last_name and first_name' do
+    teachers = Teacher.order('COGNOME_RAGSOC, NOME')
+  end
 end
