@@ -17,6 +17,6 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "Person must respond to all_remote" do
-    assert_respond_to Person, :all_remote
+    assert_respond_to Person, :all
   end
 end

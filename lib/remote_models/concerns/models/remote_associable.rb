@@ -51,6 +51,12 @@ module Intersail
           end
         end
       end
+
+      private
+
+      def remote_fields_param(klass)
+        klass.send(:rattrs).join(',')
+      end
     end
   end
 end

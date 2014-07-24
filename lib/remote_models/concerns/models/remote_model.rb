@@ -59,6 +59,7 @@ module Intersail
       def write_attribute(attr_name, value)
         instance_variable_set "@#{attr_name}", value
       end
+
     end
   end
 end
