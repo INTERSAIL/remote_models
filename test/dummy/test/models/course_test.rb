@@ -19,6 +19,10 @@ class CourseTest < ActiveSupport::TestCase
     course_with_subscriptions
   end
 
+  test "Course remote_fields for Person must return the corret string" do
+    assert_equal 'id,first_name,last_name,birth_date,height,weight,is_admin,address_id', Course.send(:remote_fields_param, Person)
+  end
+
   test "A course with teacher_id = 1 must have one teacher with id=1" do
     c = course
 
