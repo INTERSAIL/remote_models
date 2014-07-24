@@ -11,17 +11,18 @@ module Intersail
         mattr_accessor :rattrs do
           []
         end
-
-        class << self
-          def remote_attributes(*attr_accessor_args)
-            (self.rattrs << attr_accessor_args).flatten!
-            attr_accessor *attr_accessor_args
-          end
-          # alias_method :remote_attributes, :attr_accessor
-        end
       end
 
       module ClassMethods
+        def remote_attributes(*attr_accessor_args)
+          (self.rattrs << attr_accessor_args).flatten!
+          attr_accessor *attr_accessor_args
+        end
+
+        def remote_fields_param()
+          self.rattrs.join(',')
+        end
+
         def all(options={})
           build_call_to_site options
         end

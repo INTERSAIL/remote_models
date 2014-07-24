@@ -7,7 +7,7 @@ class CourseTest < ActiveSupport::TestCase
 
   def course()
     course = Course.create(name: 'Test', teacher_id: 1)
-    Course.expects(from_site: [Person.new(id:1, first_name: 'PAOLINO', last_name: 'PAPERINO')]) if ENV['MOCK']
+    Net::HTTP.expects(get: '[{"id":1, "first_name":"PAOLINO", "last_name":"PAPERINO"}]') if ENV['MOCK']
     course
   end
 
@@ -15,12 +15,12 @@ class CourseTest < ActiveSupport::TestCase
     course_with_subscriptions = Course.create(name: 'Test with subs', teacher_id:1)
     course_with_subscriptions.subscriptions.create(student_id: 2)
     course_with_subscriptions.subscriptions.create(student_id: 3)
-    Course.expects(from_site: [Person.new(id:2, first_name:'PIPPO', last_name:'PLUTO'), Person.new(id:3, first_name:'MICKEY', last_name:'MOUSE')]) if ENV['MOCK']
+    Net::HTTP.expects(get: '[{"id":2, "first_name":"PIPPO", "last_name":"PLUTO"},{"id":3, "first_name":"MICKEY", "last_name":"MOUSE"}]') if ENV['MOCK']
     course_with_subscriptions
   end
 
-  test "Course remote_fields for Person must return the corret string" do
-    assert_equal 'id,first_name,last_name,birth_date,height,weight,is_admin,address_id', Course.send(:remote_fields_param, Person)
+  test "Course remote_fields for Person must return the correct string" do
+    assert_equal 'id,first_name,last_name,birth_date,height,weight,is_admin,address_id', Person.remote_fields_param
   end
 
   test "A course with teacher_id = 1 must have one teacher with id=1" do
@@ -55,11 +55,11 @@ class CourseTest < ActiveSupport::TestCase
     assert_not_nil c.teacher
 
     c.teacher_id = 20
-    Course.expects(from_site: nil) if ENV['MOCK']
+    Net::HTTP.expects(get: '') if ENV['MOCK']
     assert_nil c.teacher
 
     c.teacher_id = 1
-    Course.expects(from_site: [Person.new(id:1, first_name:'PAOLINO', last_name: 'PAPERINO')]) if ENV['MOCK']
+    Net::HTTP.expects(get: '[{"id":1, "first_name":"PAOLINO", "last_name":"PAPERINO"}]') if ENV['MOCK']
     assert_not_nil c.teacher
   end
 end

@@ -1,18 +1,13 @@
 require 'test_helper'
 
 class PersonTest < ActiveSupport::TestCase
-  def person
-    p = Person.new(address_id:1)
-    Person.expects(:from_site).returns([Address.new(id:1)]) if ENV['MOCK']
-    p
-  end
-
   test "Person must have set rattrs" do
     assert_equal [:id, :first_name, :last_name, :birth_date, :height, :weight, :is_admin, :address_id], Person.rattrs
   end
 
   test "Person with address_id=1 must return an Address with id=1" do
-    p = person
+    p = Person.new(address_id:1)
+    Net::HTTP.expects(:get).with(URI("#{Person.site}?type=address&id=1&where=&limit=0&order=")).returns('[{"id":1}]') if ENV['MOCK']
     assert_equal 1, p.address.id
   end
 

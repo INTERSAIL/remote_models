@@ -49,10 +49,6 @@ module Intersail
             instance_variable_get(var_name)
           end
         end
-
-        def remote_fields_param(klass)
-          klass.send(:rattrs).join(',')
-        end
       end
     end
   end
