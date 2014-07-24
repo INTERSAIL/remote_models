@@ -11,4 +11,10 @@ class TeacherTest < ActiveSupport::TestCase
     assert_equal 'DOCENTE', teacher.last_name
     assert_equal 'UNO', teacher.first_name
   end
+
+  test 'Teacher.where(\'ENABLED eq 1\') must return at least one teacher' do
+    teachers = Teacher.where('ENABLED eq 1')
+    assert_not_nil teachers
+    assert_operator teachers.count, :>, 0
+  end
 end

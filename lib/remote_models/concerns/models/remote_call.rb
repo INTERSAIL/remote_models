@@ -14,8 +14,10 @@ module Intersail
       end
 
       module ClassMethods
-        def from_site(type, klass, limit, where, *ids)
-          json = Net::HTTP.get (URI("#{self.site}?type=#{type.to_s}&id=#{ids.join(',') if ids}&where=#{where}&limit=#{limit}"))
+        def from_site(type, klass, *ids, limit, where, order)
+          whereEscape = URI.escape(where) if where
+          orderEscape = URI.escape(order) if order
+          json = Net::HTTP.get (URI("#{self.site}?type=#{type.to_s}&id=#{ids.join(',') if ids}&where=#{whereEscape}&limit=#{limit}&order=#{orderEscape}"))
           return nil if json.empty?
 
           objs = ActiveSupport::JSON.decode(json)

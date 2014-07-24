@@ -27,7 +27,7 @@ module Intersail
         end
 
         def first(options={})
-          options.store(:limit, 1)
+          options.replace(limit: 1)
           items = build_call_to_site(options)
           if (items && items.count > 0)
             items[0]
@@ -36,13 +36,25 @@ module Intersail
           end
         end
 
+        def where(condition, options={})
+          options.store(:where, condition)
+          build_call_to_site options
+        end
+
+        def order(order_list, options={})
+          options.store(:order, order_list)
+          build_call_to_site options
+        end
+
         private
 
         def build_call_to_site(options={})
           name = options.delete(:name) || self.name.to_s.underscore
           klass = self.name
           limit = options.delete(:limit) || 0
-          from_site(name, klass, limit, nil, nil)
+          where = options.delete(:where)
+          order = options.delete(:order)
+          from_site(name, klass, nil, limit, where, order)
         end
       end
 
