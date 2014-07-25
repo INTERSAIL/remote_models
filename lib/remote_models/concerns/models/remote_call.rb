@@ -18,7 +18,7 @@ module Intersail
           # klass deve essere del tipo "TizioCaio", quindi per sicurezza prendo il parametro klass e ne faccio il titleize (che quindi lo divide in parole), poi rimuovo gli spazi
           klass = klass.to_s.titleize.split.join("").constantize
 
-          json = Net::HTTP.get (URI("#{self.site}?type=#{type.to_s}&id=#{ids && ids.join(',')}&where=#{encode_url(where)}&limit=#{limit}&order=#{encode_url(order)}"))
+          json = Net::HTTP.get (URI("#{self.site}?type=#{type.to_s}&id=#{ids && ids.join(',')}&where=#{encode_url(where)}&limit=#{limit}&order=#{encode_url(order)}&fields=#{klass.remote_fields_param}"))
           return nil if json.empty?
 
           objs = ActiveSupport::JSON.decode(json)
