@@ -24,11 +24,22 @@ module Intersail
         end
 
         def all(options={})
+          options.replace(limit: 0)
           build_call_to_site options
         end
 
         def first(options={})
           options.replace(limit: 1)
+          items = build_call_to_site(options)
+          if (items && items.count > 0)
+            items[0]
+          else
+            nil
+          end
+        end
+
+        def last(options={})
+          options.replace(limit: -1)
           items = build_call_to_site(options)
           if (items && items.count > 0)
             items[0]
