@@ -15,7 +15,8 @@ module Intersail
 
       module ClassMethods
         def from_site(type, klass, *ids, limit, where, order)
-          klass = klass.to_s.capitalize.constantize
+          # klass deve essere del tipo "TizioCaio", quindi per sicurezza prendo il parametro klass e ne faccio il titleize (che quindi lo divide in parole), poi rimuovo gli spazi
+          klass = klass.to_s.titleize.split.join("").constantize
 
           json = Net::HTTP.get (URI("#{self.site}?type=#{type.to_s}&id=#{ids && ids.join(',')}&where=#{encode_url(where)}&limit=#{limit}&order=#{encode_url(order)}"))
           return nil if json.empty?

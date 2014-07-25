@@ -7,7 +7,7 @@ class TeacherTest < ActiveSupport::TestCase
     # ) if ENV['MOCK']
     Net::HTTP.expects(:get).with(URI("#{Teacher.site}?type=teacher&id=&where=&limit=0&order=")).returns(
         '[{}]'
-    )
+    ) if ENV['MOCK']
     teachers = Teacher.all
     assert_not_nil teachers
   end
@@ -48,6 +48,7 @@ class TeacherTest < ActiveSupport::TestCase
     ) if ENV['MOCK']
 
     teachers = Teacher.order('COGNOME_RAGSOC, NOME')
+    assert_operator teachers.count, :>=, 2
     assert (teachers[0].last_name < teachers[1].last_name), 'Order not satisfied'
   end
 end
