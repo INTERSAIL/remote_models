@@ -3,6 +3,8 @@ require 'settings'
 require 'remote_models/concerns/models/remote_call'
 require 'remote_models/concerns/models/remote_associable'
 require 'remote_models/concerns/models/remote_model'
+require 'remote_models/concerns/models/remote_relation'
+
 
 module Intersail
   module RemoteModels
